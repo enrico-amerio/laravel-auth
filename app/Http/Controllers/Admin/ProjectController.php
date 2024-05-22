@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Project;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProjectsRequest;
 
 class ProjectController extends Controller
 {
@@ -22,15 +23,21 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.projects.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProjectsRequest $request)
     {
-        //
+        $form_data = $request->all();
+        $new_project = new Project();
+        $new_project-> title = $form_data['title'];
+        $new_project-> description = $form_data['description'];
+        $new_project->save();
+
+       return redirect()->route('admin.projects.index', $new_project);
     }
 
     /**
@@ -46,22 +53,27 @@ class ProjectController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $project = Project::find($id);
+        return view('admin.projects.edit', compact('project'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProjectsRequest $request, Project $project)
     {
-        //
+        $form_data = $request->all();
+
+        $project->update($form_data);
+        return redirect()->route('admin.projects.index', $project);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Project $project)
     {
-        //
+        $project->delete();
+        return redirect()->route('admin.projects.index')->with('deleted', 'Il progetto ' . $project->title . 'è stato eliminato!');
     }
 }
