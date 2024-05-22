@@ -1,1 +1,8 @@
-@import '~bootstrap/scss/bootstrap'
+@import '~bootstrap/scss/bootstrap';
+
+.crud-table{
+    input{
+        border:none;
+        outline: none;
+    }
+}
